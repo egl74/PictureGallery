@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.IO;
 using System.Web.Mvc;
+using System.Web.UI;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using MvcFileUploader;
 using MvcFileUploader.Models;
+using PictureGallery.Migrations;
 using PictureGallery.Models;
 
 namespace PictureGallery.Controllers
@@ -37,20 +40,38 @@ namespace PictureGallery.Controllers
                         "djnqdhxa1",
                         "339589888966938",
                         "SY4SK3NWfoed9K7BjoBLhQJ4lu4"));
+                    var filePath = Server.MapPath("~") + "\\file";
+                    var fileStream = System.IO.File.Create(filePath);
+                    x.File.InputStream.Seek(0, SeekOrigin.Begin);
+                    x.File.InputStream.CopyTo(fileStream);
+                    fileStream.Close();
                     var uploadParams = new RawUploadParams
                     {
                         File = new FileDescription(
-                            "", x.File.InputStream)
+                            filePath)
                     };
                     var uploadResult = cloudinary.Upload(uploadParams);
+                    System.IO.File.Delete(filePath);
                     //x.StorageDirectory = Server.MapPath("~/Content/uploads");
                     x.UrlPrefix = uploadResult.SecureUri.AbsoluteUri;//"/Content/uploads";// this is used to generate the relative url of the file
-                    var currentUser = UserManager.Users.First(u => u.Id == User.Identity.GetUserId());
-                    currentUser.Pictures.Add(new Picture{UserId = new Guid(currentUser.Id), });
-
+                    var c = ApplicationDbContext.Create();
+                    //c.Users.FirstOrDefault(u => u.Id == User.Identity.GetUserId()).Pictures.Add(new Picture{UserId = new Guid(User.Identity.GetUserId()), Url = x.UrlPrefix});
+                    string currentUserId = User.Identity.GetUserId();
+                    var currentUser = c.Users.FirstOrDefault(u => u.Id == currentUserId);
+                    if (currentUser.Pictures != null)
+                    {
+                        currentUser.Pictures.Add(new Picture { UserId = new Guid(User.Identity.GetUserId()), Url = x.UrlPrefix });
+                    }
+                    else
+                    {
+                        currentUser.Pictures = new List<Picture>
+                        {
+                            new Picture {UserId = new Guid(User.Identity.GetUserId()), Url = x.UrlPrefix}
+                        };
+                    }
                     //overriding defaults
                     x.FileName = Request.Files[i].FileName;// default is filename suffixed with filetimestamp
-                    x.ThrowExceptions = true;//default is false, if false exception message is set in error property
+                    x.ThrowExceptions = false;//default is false, if false exception message is set in error property
                 });
 
                 statuses.Add(st);

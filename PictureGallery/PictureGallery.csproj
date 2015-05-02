@@ -39,14 +39,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Backload, Version=1.9.3.0, Culture=neutral, PublicKeyToken=02eaf42ab375d363, processorArchitecture=MSIL">
-      <HintPath>..\packages\Backload.1.9.3.0\lib\net45\Backload.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Backload.Contracts, Version=1.9.3.0, Culture=neutral, PublicKeyToken=079b4834180abdf7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Backload.1.9.3.0\lib\net45\Backload.Contracts.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="CloudinaryDotNet">
       <HintPath>..\..\PictureGallery_\packages\CloudinaryDotNet.1.0.21\lib\net40\CloudinaryDotNet.dll</HintPath>
     </Reference>
@@ -176,7 +168,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\BackloadConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -190,6 +181,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505022003356_Initial.cs" />
+    <Compile Include="Migrations\201505022003356_Initial.Designer.cs">
+      <DependentUpon>201505022003356_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -340,6 +336,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201505022003356_Initial.resx">
+      <DependentUpon>201505022003356_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

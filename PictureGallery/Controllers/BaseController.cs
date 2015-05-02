@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
 
+
 namespace PictureGallery.Controllers
 {
     public class BaseController : Controller
