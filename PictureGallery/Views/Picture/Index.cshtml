@@ -1,41 +1,104 @@
-﻿<html>
-<head>
-    <meta charset="utf-8">
-    <title>jQuery File Upload Example</title>
-</head>
-    <body>
-        <div id="buttons">
-            <input id="fileupload" type="file" name="file" data-url=/Picture/UploadImage class="btn btn-default fileinput-button" />
-        </div>
-        
-        <script src="~/Scripts/jquery-2.1.3.js"></script>
-        <script src="~/Scripts/jquery-ui.js"></script>
-        <script src="~/Scripts/jquery.iframe-transport.js"></script>
-        <script src="~/Scripts/jquery.fileupload.js"></script>
-        
-        <script>
-            $(document).ready(
-                $('#fileupload').fileupload({
-                    progressall: function(e, data) {
-                        var progress = parseInt(data.loaded / data.total * 100, 10);
-                        $('#progress .bar').css(
-                            'width',
-                            progress + '%'
-                        );
-                    },
-                    dataType: 'json',
-                    add: function(e, data) {
-                        data.context = $('<button class="btn btn-success"/>').text('Upload')
-                            .appendTo('#buttons')
-                            .click(function() {
-                                data.context = $('<p/>').text('Uploading...').replaceAll($(this));
-                                data.submit();
-                            });
-                    },
-                    done: function(e, data) {
-                        data.context.text('Upload finished.');
-                    }
-                }));
-        </script>
-    </body>
-</html>
+﻿@using MvcFileUploader.HtmlHelper
+@using MvcFileUploader.Models
+@{
+    ViewBag.Title = "Pictures";
+
+    var showingInline = Model != null && Model == true;
+
+    //option for inline view only
+    //var ui = "jquery".Equals(Request.Params["ui"]) ? UploadUI.JQueryUI : UploadUI.Bootstrap;
+    //var toggleUi = ui == UploadUI.Bootstrap ? "jquery" : "bootstrap";
+
+    //setting layout based on ui
+    Layout = "~/Views/Shared/_Layout.cshtml";// + (ui == UploadUI.Bootstrap ? "_MvcFileUploaderLayout.cshtml" : "_MvcFileUploaderLayout_jui.cshtml");
+}
+
+@*@if (!showingInline)
+{
+    <div class="well">
+        <legend>Upload Dialog</legend>
+        <p class="help-block">jpg/png size max 5 MB, single file upload</p>
+        @(
+ Html.MvcFileUpload()
+        .UploadAt(Url.Action("UploadFile"))
+        .WithFileTypes(@"/(\.|\/)(jpe?g|png)$/i")
+        .WithMaxFileSize(5000000)
+        .AddFormField("entityId", "1234")
+        .RenderPopup("Upload", "#dlgFileUpload", new { @class = "btn btn-large btn-primary" })
+        )
+    </div>
+
+
+    <div class="well">
+        <legend>Upload Dialog with return url on closing</legend>
+        <p class="help-block">jpg/png size max 5 MB</p>
+        @(
+ Html.MvcFileUpload()
+        .UploadAt(Url.Action("UploadFile"))
+        .ReturnAt("/MvcUploaderTest/Demo?inline=True")
+        .WithFileTypes(@"/(\.|\/)(jpe?g|png)$/i")
+        .WithMaxFileSize(5000000)
+        .RenderPopup("Upload Button Label", "#dlgFileUpload", new { @class = "btn btn-large btn-primary" })
+        )
+    </div>
+
+    <!-- file upload modal dialog -->
+    <div class="modal fade" id="dlgFileUpload" tabindex="-1" role="dialog" aria-hidden="true">
+
+    </div><!-- /.modal -->
+
+
+}*@
+
+
+@*@if (showingInline)
+{*@
+    @*<div class="well">
+        <legend>Upload Inline</legend>
+        <p class="help-block">jpg/png size max 5 MB</p>
+        @(
+ Html.MvcFileUpload()
+        .UploadAt(Url.Action("UploadFile"))
+        .UIStyle(ui)
+        .WithFileTypes(@"/(\.|\/)(jpe?g|png)$/i")
+        .WithMaxFileSize(5000000)
+        .AddFormField("entityId", "1234")
+        .RenderInline("_MvcFileupload")
+        )
+
+    </div>*@
+
+    <div class="well">
+        <legend>Another inline uploader in same page</legend>
+        <p class="help-block">jpg/png size max 5 MB, max number of files 5, image preview enabled</p>
+        @*<p class="help-block">note: do not set thumbnailUrl in returned json from server side controller in case image preview is disabled, in this demo it is being set, so tumbnail is shown after upload.</p>*@
+        @(
+ Html.MvcFileUpload()
+        .UploadAt(Url.Action("UploadFile"))
+        .WithFileTypes(@"/(\.|\/)(jpe?g|png)$/i")
+        .WithMaxFileSize(5000000)
+        .MaxNumberOfFiles(5)
+        .RenderInline("_MvcFileupload")
+        )
+    </div>
+
+    @*<div class="well">
+        <legend>Server side error generation</legend>
+        <p class="help-block">Randomly generates error file size or entityId error from server side controller code. Any file type.</p>
+        @(
+ Html.MvcFileUpload()
+        .UploadAt(Url.Action("UploadFile"))
+        .WithMaxFileSize(5000000)
+        .AddFormField("entityId", "13")
+        .ExcludeSharedScript()  //this should be called as this page contains another inline widget which loaded shared scripts
+        .RenderInline("_MvcFileupload")
+        )
+    </div>*@
+
+    @*<p>
+        @Html.ActionLink("Show " + toggleUi + " ui", "Demo", new { inline = true, ui = toggleUi }, new { @class = "btn btn-info" })
+    </p>*@
+@*}*@
+
+
+@*@Html.ActionLink(showingInline ? "Show modal dialog demo" : "Show inline demo", "Demo", new { inline = !showingInline }, new { @class = "btn btn-info" })*@

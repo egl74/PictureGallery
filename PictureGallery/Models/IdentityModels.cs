@@ -27,6 +27,7 @@ namespace PictureGallery.Models
     {
         [Key]
         public int Id { get; set; }
+        public string Url { get; set; }
         public Guid UserId { get; set; }
         public int? GalleryId { get; set; }
 
@@ -49,8 +50,7 @@ namespace PictureGallery.Models
     
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+        public ApplicationDbContext(): base("DefaultConnection", throwIfV1Schema: false)
         {
         }
 
