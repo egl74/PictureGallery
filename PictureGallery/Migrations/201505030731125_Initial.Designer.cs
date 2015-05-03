@@ -13,7 +13,7 @@ namespace PictureGallery.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201505022003356_Initial"; }
+            get { return "201505030731125_Initial"; }
         }
         
         string IMigrationMetadata.Source

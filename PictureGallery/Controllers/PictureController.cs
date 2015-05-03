@@ -10,7 +10,6 @@ using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using MvcFileUploader;
 using MvcFileUploader.Models;
-using PictureGallery.Migrations;
 using PictureGallery.Models;
 
 namespace PictureGallery.Controllers
