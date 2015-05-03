@@ -35,7 +35,7 @@ namespace PictureGallery.Controllers
             {
                 var x = new MvcFileSave();
                 x.File = Request.Files[i];
-                var filePath = Server.MapPath("~") + "\\file";
+                var filePath = Server.MapPath("~\\file");
                 var fileStream = System.IO.File.Create(filePath);
                 x.File.InputStream.Seek(0, SeekOrigin.Begin);
                 x.File.InputStream.CopyTo(fileStream);
