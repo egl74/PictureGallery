@@ -4,12 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
+using PictureGallery.Models;
 
 
 namespace PictureGallery.Controllers
 {
     public class BaseController : Controller
     {
+        protected ApplicationDbContext Context = ApplicationDbContext.Create();
         protected ApplicationSignInManager _signInManager;
         protected ApplicationUserManager _userManager;
 

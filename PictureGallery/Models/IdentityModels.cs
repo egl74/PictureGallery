@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -14,6 +16,12 @@ namespace PictureGallery.Models
         public ICollection<Picture> Pictures { get; set; }
         public ICollection<Gallery> Galleries { get; set; }
 
+        public ApplicationUser():base()
+        {
+            Pictures = new HashSet<Picture>();
+            Galleries = new Collection<Gallery>();
+        }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -26,6 +34,7 @@ namespace PictureGallery.Models
     public class Picture
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Url { get; set; }
         public Guid UserId { get; set; }
@@ -37,6 +46,7 @@ namespace PictureGallery.Models
     public class Gallery
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public Guid UserId { get; set; }
 

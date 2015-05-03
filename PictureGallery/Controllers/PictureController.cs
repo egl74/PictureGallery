@@ -18,6 +18,10 @@ namespace PictureGallery.Controllers
     [Authorize]
     public class PictureController : BaseController
     {
+        readonly Cloudinary cloudinary = new Cloudinary(new Account(
+                        "djnqdhxa1",
+                        "339589888966938",
+                        "SY4SK3NWfoed9K7BjoBLhQJ4lu4"));
         // GET: Gallery
         public ActionResult Index()
         {
@@ -30,51 +34,40 @@ namespace PictureGallery.Controllers
             var statuses = new List<ViewDataUploadFileResult>();
             for (var i = 0; i < Request.Files.Count; i++)
             {
-                var st = FileSaver.StoreFile(x =>
+                var x = new MvcFileSave();
+                x.File = Request.Files[i];
+                var filePath = Server.MapPath("~") + "\\file";
+                var fileStream = System.IO.File.Create(filePath);
+                x.File.InputStream.Seek(0, SeekOrigin.Begin);
+                x.File.InputStream.CopyTo(fileStream);
+                fileStream.Close();
+                //BinaryReader b = new BinaryReader(x.File.InputStream);
+                //byte[] binImage = b.ReadBytes(Convert.ToInt32(x.File.InputStream.Length));
+                //Stream stream = new MemoryStream(binImage);
+                var uploadParams = new RawUploadParams
                 {
-                    x.File = Request.Files[i];
-                    //note how we are adding an additional value to be posted with delete request
-                    //and giving it the same value posted with upload
-                    x.DeleteUrl = Url.Action("DeleteFile", new { entityId = entityId });
-                    var cloudinary = new Cloudinary(new Account(
-                        "djnqdhxa1",
-                        "339589888966938",
-                        "SY4SK3NWfoed9K7BjoBLhQJ4lu4"));
-                    var filePath = Server.MapPath("~") + "\\file";
-                    var fileStream = System.IO.File.Create(filePath);
-                    x.File.InputStream.Seek(0, SeekOrigin.Begin);
-                    x.File.InputStream.CopyTo(fileStream);
-                    fileStream.Close();
-                    var uploadParams = new RawUploadParams
-                    {
-                        File = new FileDescription(
-                            filePath)
-                    };
-                    var uploadResult = cloudinary.Upload(uploadParams);
-                    System.IO.File.Delete(filePath);
-                    //x.StorageDirectory = Server.MapPath("~/Content/uploads");
-                    x.UrlPrefix = uploadResult.SecureUri.AbsoluteUri;//"/Content/uploads";// this is used to generate the relative url of the file
-                    var c = ApplicationDbContext.Create();
-                    //c.Users.FirstOrDefault(u => u.Id == User.Identity.GetUserId()).Pictures.Add(new Picture{UserId = new Guid(User.Identity.GetUserId()), Url = x.UrlPrefix});
-                    string currentUserId = User.Identity.GetUserId();
-                    var currentUser = c.Users.FirstOrDefault(u => u.Id == currentUserId);
-                    if (currentUser.Pictures != null)
-                    {
-                        currentUser.Pictures.Add(new Picture { UserId = new Guid(User.Identity.GetUserId()), Url = x.UrlPrefix });
-                    }
-                    else
-                    {
-                        currentUser.Pictures = new List<Picture>
-                        {
-                            new Picture {UserId = new Guid(User.Identity.GetUserId()), Url = x.UrlPrefix}
-                        };
-                    }
-                    //overriding defaults
-                    x.FileName = Request.Files[i].FileName;// default is filename suffixed with filetimestamp
-                    x.ThrowExceptions = false;//default is false, if false exception message is set in error property
+                    File = new FileDescription(filePath)
+                };
+                var uploadResult = cloudinary.Upload(uploadParams);
+                System.IO.File.Delete(filePath);
+                x.UrlPrefix = uploadResult.SecureUri.AbsoluteUri;
+                string currentUserId = User.Identity.GetUserId();
+                
+                var currentUser = Context.Users.SingleOrDefault(u => u.Id == currentUserId);
+                currentUser.Pictures.Add(new Picture {Url = x.UrlPrefix});
+                
+                Context.SaveChanges();
+                x.FileName = Request.Files[i].FileName; // default is filename suffixed with filetimestamp
+                x.ThrowExceptions = false; //default is false, if false exception message is set in error property
+                statuses.Add(new ViewDataUploadFileResult
+                {
+                    FullPath = x.UrlPrefix,
+                    size = x.File.ContentLength,
+                    deleteUrl = x.DeleteUrl,
+                    thumbnailUrl = x.UrlPrefix,
+                    url = x.UrlPrefix,
+                    name = x.FileName
                 });
-
-                statuses.Add(st);
             }
 
             //statuses contains all the uploaded files details (if error occurs then check error property is not null or empty)
@@ -107,52 +100,9 @@ namespace PictureGallery.Controllers
             return viewresult;
         }
 
-
-
-
-
-        //here i am receving the extra info injected
-        [HttpPost] // should accept only post
-        public ActionResult DeleteFile(int? entityId, string fileUrl)
-        {
-            var filePath = Server.MapPath("~" + fileUrl);
-
-            if (System.IO.File.Exists(filePath))
-                System.IO.File.Delete(filePath);
-
-            var viewresult = Json(new { error = String.Empty });
-            //for IE8 which does not accept application/json
-            if (Request.Headers["Accept"] != null && !Request.Headers["Accept"].Contains("application/json"))
-                viewresult.ContentType = "text/plain";
-
-            return viewresult; // trigger success
-        }
-
-
         public ActionResult DownloadFile(string fileUrl, string mimetype)
         {
-            var filePath = Server.MapPath("~" + fileUrl);
-
-            if (System.IO.File.Exists(filePath))
-                return File(filePath, mimetype);
-            else
-            {
-                return new HttpNotFoundResult("File not found");
-            }
-        }
-
-        [HttpPost]
-        public void UploadImage(string path)
-        {
-            var cloudinary = new Cloudinary(new Account(
-                "djnqdhxa1",
-                "339589888966938",
-                "SY4SK3NWfoed9K7BjoBLhQJ4lu4"));
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(path)
-            };
-            var uploadResult = cloudinary.Upload(uploadParams);
+            return Redirect(fileUrl);
         }
     }
 }

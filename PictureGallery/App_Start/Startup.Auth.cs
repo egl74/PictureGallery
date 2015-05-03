@@ -58,7 +58,10 @@ namespace PictureGallery
                appId: "377863969067822",
                appSecret: "b05977590d28378deab9295b54585321");
 
-            app.UseVkontakteAuthentication("4888672", "cKs5x7XJVQ7vgVu3dIt7", "http://www.asp.net/");
+            app.UseVkontakteAuthentication(
+                "4888672",
+                "cKs5x7XJVQ7vgVu3dIt7",
+                "http://www.asp.net/");
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{
