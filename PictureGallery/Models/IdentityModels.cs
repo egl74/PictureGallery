@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -63,6 +64,9 @@ namespace PictureGallery.Models
         public ApplicationDbContext(): base("DefaultConnection", throwIfV1Schema: false)
         {
         }
+
+        public virtual DbSet<Picture> Pictures { get; set; }
+        public virtual DbSet<Gallery> Galleries { get; set; }
 
         public static ApplicationDbContext Create()
         {

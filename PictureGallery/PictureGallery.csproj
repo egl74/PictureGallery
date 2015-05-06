@@ -193,6 +193,8 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\blueimp-gallery.min.css" />
+    <Content Include="Content\bootstrap-image-gallery.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\demos.bootstrap.styles.css" />
@@ -266,9 +268,11 @@
     <Content Include="Release notes.txt" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\bootstrap-image-gallery.min.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.blueimp-gallery.min.js" />
     <Content Include="Scripts\jquery.filedrop.js" />
     <Content Include="Scripts\jquery.fileupload-jquery-ui.js" />
     <Content Include="Scripts\jquery.fileupload-ui.js" />
@@ -321,6 +325,7 @@
     <Content Include="Views\Shared\_MvcFileUpload.cshtml" />
     <Content Include="Views\Shared\_MvcFileUploaderLayout.cshtml" />
     <Content Include="Views\Shared\_MvcFileUploaderLayout_jui.cshtml" />
+    <Content Include="Views\Picture\_PicturesView.cshtml" />
     <None Include="Web.Backload.Default.config" />
     <None Include="Web.Backload.xsd">
       <SubType>Designer</SubType>

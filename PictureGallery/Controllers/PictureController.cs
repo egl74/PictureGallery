@@ -24,7 +24,7 @@ namespace PictureGallery.Controllers
         // GET: Gallery
         public ActionResult Index()
         {
-            return View();
+            return View(GetAllPicturesOfCurrentUser());
         }
 
         public ActionResult UploadFile(int? entityId) // optionally receive values specified with Html helper
@@ -35,7 +35,7 @@ namespace PictureGallery.Controllers
             {
                 var x = new MvcFileSave();
                 x.File = Request.Files[i];
-                var filePath = Server.MapPath("~\\file");
+                var filePath = Server.MapPath("~\\" + x.File.FileName);
                 var fileStream = System.IO.File.Create(filePath);
                 x.File.InputStream.Seek(0, SeekOrigin.Begin);
                 x.File.InputStream.CopyTo(fileStream);
@@ -76,8 +76,7 @@ namespace PictureGallery.Controllers
             statuses.ForEach(x => x.thumbnailUrl = x.url);// + " width=300px height=200px"); // uses ImageResizer httpmodule to resize images from this url
             //setting custom download url instead of direct url to file which is default
             statuses.ForEach(x => x.url = Url.Action("DownloadFile", new { fileUrl = x.url, mimetype = x.type }));
-
-
+            
             //server side error generation, generate some random error if entity id is 13
             if (entityId == 13)
             {
@@ -102,6 +101,15 @@ namespace PictureGallery.Controllers
         public ActionResult DownloadFile(string fileUrl, string mimetype)
         {
             return Redirect(fileUrl);
+        }
+
+        public List<string> GetAllPicturesOfCurrentUser()
+        {
+            string currentUserId = User.Identity.GetUserId();
+
+            //var result = Context.Pictures.Where(p => p.UserId.ToString() == currentUserId).Select(l => l.Url).ToList();
+            var result = Context.Pictures.Where(p => p.UserId.ToString() == currentUserId).Select(u => u.Url).ToList();
+            return result;
         }
     }
 }

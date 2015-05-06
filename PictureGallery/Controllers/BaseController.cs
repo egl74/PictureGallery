@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using PictureGallery.Models;
 
@@ -12,17 +14,16 @@ namespace PictureGallery.Controllers
     public class BaseController : Controller
     {
         protected ApplicationDbContext Context = ApplicationDbContext.Create();
-        protected ApplicationSignInManager _signInManager;
         protected ApplicationUserManager _userManager;
+        protected ApplicationSignInManager _signInManager; 
 
-        public BaseController()
+        public BaseController(): this(new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
         }
 
-        public BaseController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public BaseController(ApplicationUserManager userManager)
         {
             UserManager = userManager;
-            SignInManager = signInManager;
         }
 
         public ApplicationSignInManager SignInManager
@@ -31,10 +32,7 @@ namespace PictureGallery.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
-            }
+            set { _signInManager = value; }
         }
 
         public ApplicationUserManager UserManager
