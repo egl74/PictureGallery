@@ -38,10 +38,15 @@ namespace PictureGallery.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Url { get; set; }
-        public Guid UserId { get; set; }
+
+        [ForeignKey("User")]
+        public string UserId { get; set; }
+
+        [ForeignKey("Gallery")]
         public int? GalleryId { get; set; }
 
         public Gallery Gallery { get; set; }
+        public ApplicationUser User { get; set; }
     }
 
     public class Gallery
@@ -49,7 +54,8 @@ namespace PictureGallery.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public Guid UserId { get; set; }
+        [ForeignKey("User")]
+        public string UserId { get; set; }
 
         public ICollection<Picture> Pictures { get; set; }
 
@@ -57,6 +63,8 @@ namespace PictureGallery.Models
         {
             Pictures = new HashSet<Picture>();
         }
+
+        public ApplicationUser User { get; set; }
     }
     
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -72,5 +80,16 @@ namespace PictureGallery.Models
         {
             return new ApplicationDbContext();
         }
+
+        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //{
+        //    // ignore a type that is not mapped to a database table
+        //    modelBuilder.Ignore<IdentityDbContext>();
+
+        //    // ignore a property that is not mapped to a database column
+        //    modelBuilder.Entity<Picture>()
+        //        .Ignore(p => p.);
+
+        //}
     }
 }

@@ -51,9 +51,7 @@ namespace PictureGallery.Controllers
                 System.IO.File.Delete(filePath);
                 x.UrlPrefix = uploadResult.SecureUri.AbsoluteUri;
                 string currentUserId = User.Identity.GetUserId();
-                
-                var currentUser = Context.Users.SingleOrDefault(u => u.Id == currentUserId);
-                currentUser.Pictures.Add(new Picture {Url = x.UrlPrefix});
+                Context.Pictures.Add(new Picture {Url = x.UrlPrefix, UserId = currentUserId});
                 
                 Context.SaveChanges();
                 x.FileName = Request.Files[i].FileName; // default is filename suffixed with filetimestamp
@@ -108,7 +106,7 @@ namespace PictureGallery.Controllers
             string currentUserId = User.Identity.GetUserId();
 
             //var result = Context.Pictures.Where(p => p.UserId.ToString() == currentUserId).Select(l => l.Url).ToList();
-            var result = Context.Pictures.Where(p => p.UserId.ToString() == currentUserId).Select(u => u.Url).ToList();
+            var result = Context.Pictures.Where(p => p.UserId == currentUserId).Select(u => u.Url).ToList();
             return result;
         }
     }
