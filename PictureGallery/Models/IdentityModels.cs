@@ -15,12 +15,10 @@ namespace PictureGallery.Models
     public class ApplicationUser : IdentityUser
     {
         public ICollection<Picture> Pictures { get; set; }
-        public ICollection<Gallery> Galleries { get; set; }
 
         public ApplicationUser():base()
         {
             Pictures = new HashSet<Picture>();
-            Galleries = new Collection<Gallery>();
         }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
@@ -42,31 +40,9 @@ namespace PictureGallery.Models
         [ForeignKey("User")]
         public string UserId { get; set; }
 
-        [ForeignKey("Gallery")]
-        public int? GalleryId { get; set; }
-
-        public Gallery Gallery { get; set; }
         public ApplicationUser User { get; set; }
     }
 
-    public class Gallery
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        [ForeignKey("User")]
-        public string UserId { get; set; }
-
-        public ICollection<Picture> Pictures { get; set; }
-
-        public Gallery()
-        {
-            Pictures = new HashSet<Picture>();
-        }
-
-        public ApplicationUser User { get; set; }
-    }
-    
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(): base("DefaultConnection", throwIfV1Schema: false)
@@ -74,7 +50,6 @@ namespace PictureGallery.Models
         }
 
         public virtual DbSet<Picture> Pictures { get; set; }
-        public virtual DbSet<Gallery> Galleries { get; set; }
 
         public static ApplicationDbContext Create()
         {

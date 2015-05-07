@@ -54,6 +54,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -181,9 +182,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201505071123504_Initial.cs" />
-    <Compile Include="Migrations\201505071123504_Initial.Designer.cs">
-      <DependentUpon>201505071123504_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201505071429075_Initial.cs" />
+    <Compile Include="Migrations\201505071429075_Initial.Designer.cs">
+      <DependentUpon>201505071429075_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -326,6 +327,7 @@
     <Content Include="Views\Shared\_MvcFileUploaderLayout.cshtml" />
     <Content Include="Views\Shared\_MvcFileUploaderLayout_jui.cshtml" />
     <Content Include="Views\Picture\_PicturesView.cshtml" />
+    <Content Include="Views\Picture\_LoadBoobsView.cshtml" />
     <None Include="Web.Backload.Default.config" />
     <None Include="Web.Backload.xsd">
       <SubType>Designer</SubType>
@@ -343,8 +345,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201505071123504_Initial.resx">
-      <DependentUpon>201505071123504_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201505071429075_Initial.resx">
+      <DependentUpon>201505071429075_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

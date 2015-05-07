@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Net;
 using System.Web.Mvc;
-using System.Web.UI;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
-using MvcFileUploader;
 using MvcFileUploader.Models;
+using Newtonsoft.Json;
 using PictureGallery.Models;
+using Newtonsoft.Json.Linq;
 
 namespace PictureGallery.Controllers
 {
@@ -94,6 +94,24 @@ namespace PictureGallery.Controllers
                 viewresult.ContentType = "text/plain";
 
             return viewresult;
+        }
+
+        public JsonResult LoadBoobs()
+        {
+            var jsonString = new WebClient().DownloadString("http://api.oboobs.ru/noise/1");
+            var index = jsonString.IndexOf("noise_preview/");
+            var id = jsonString.Substring(index + 14, 5);
+            var uploadParams = new RawUploadParams
+            {
+                File = new FileDescription("http://media.oboobs.ru/noise/"+ id + ".jpg")
+            };
+
+            var uploadResult = cloudinary.Upload(uploadParams);
+            string currentUserId = User.Identity.GetUserId();
+            Context.Pictures.Add(new Picture { Url = uploadResult.SecureUri.AbsoluteUri, UserId = currentUserId });
+
+            Context.SaveChanges();
+            return Json(uploadResult.SecureUri.AbsoluteUri);
         }
 
         public ActionResult DownloadFile(string fileUrl, string mimetype)
