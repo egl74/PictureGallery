@@ -329,7 +329,7 @@
     <Content Include="Views\Shared\_MvcFileUploaderLayout.cshtml" />
     <Content Include="Views\Shared\_MvcFileUploaderLayout_jui.cshtml" />
     <Content Include="Views\Picture\_PicturesView.cshtml" />
-    <Content Include="Views\Picture\_LoadBoobsView.cshtml" />
+    <Content Include="Views\Shared\_LoadBoobsView.cshtml" />
     <None Include="Web.Backload.Default.config" />
     <None Include="Web.Backload.xsd">
       <SubType>Designer</SubType>
