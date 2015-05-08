@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -50,17 +51,18 @@ namespace PictureGallery
             //    clientId: "",
             //    clientSecret: "");
 
+            //below you need to use your own credentials
             app.UseTwitterAuthentication(
-               consumerKey: "QYsM0eqXnLWs7IEWVXa3DMoAL",
-               consumerSecret: "1Rkc2RN5s5wvAPMl6ZdkI7M19tSsXU3NbB3w40GohcEATCnYar");
+               consumerKey: ConfigurationManager.AppSettings["twitterKey"],
+               consumerSecret: ConfigurationManager.AppSettings["twitterSecret"]);
 
             app.UseFacebookAuthentication(
-               appId: "377863969067822",
-               appSecret: "b05977590d28378deab9295b54585321");
+               appId: ConfigurationManager.AppSettings["fbId"],
+               appSecret: ConfigurationManager.AppSettings["fbSecret"]);
 
             app.UseVkontakteAuthentication(
-                "4888672",
-                "cKs5x7XJVQ7vgVu3dIt7",
+                ConfigurationManager.AppSettings["vkId"],
+                ConfigurationManager.AppSettings["vkSecret"],
                 "http://www.asp.net/");
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()

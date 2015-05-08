@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.IO;
 using System.Net;
@@ -8,19 +9,18 @@ using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNet.Identity;
 using MvcFileUploader.Models;
-using Newtonsoft.Json;
 using PictureGallery.Models;
-using Newtonsoft.Json.Linq;
 
 namespace PictureGallery.Controllers
 {
     [Authorize]
     public class PictureController : BaseController
     {
+        //add your own credentials
         readonly Cloudinary cloudinary = new Cloudinary(new Account(
-                        "djnqdhxa1",
-                        "339589888966938",
-                        "SY4SK3NWfoed9K7BjoBLhQJ4lu4"));
+                        ConfigurationManager.AppSettings["cloudinaryId"],
+                        ConfigurationManager.AppSettings["cloudinaryKey"],
+                        ConfigurationManager.AppSettings["cloudinarySecret"]));
         // GET: Gallery
         public ActionResult Index()
         {
